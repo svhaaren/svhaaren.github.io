@@ -1,178 +1,406 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MENACE Streichholzschachteln mit Spielfeld</title>
+<title>Komplettes Beispiel</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <style>
+  body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #000;
+    color: #e1e1d8;
+    margin: 0;
+    padding: 20px;
+  }
+  .header-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 150px;
+    text-transform: none;
+    text-align: center;
+    color: e1e1d8;
+    margin: 0;
+    line-height: 0.9;
+    letter-spacing: +15px;
+}
+.sub-header-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 50px;
+    text-transform: none;
+    text-align: center;
+    color: e1e1d8;
+    margin: 0;
+    line-height: 0.9;
+    letter-spacing: +10px;
+}
   .box-container {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     padding: 20px;
   }
-.input-grid-container {
+  .input-grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .transformation-container {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     padding: 20px;
   }
-  .box{
-    width: 180px;
-    height: auto;
+  .controls-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    border: 2px solid black;
-    padding: 10px;
-    font-family: Arial, sans-serif;
+    justify-content: center; /* Zentriert die Buttons vertikal */
   }
- .input-grid {
-    width: 180px;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    border: 2px solid black;
-    padding: 10px;
-    font-family: Arial, sans-serif;
-  }
+.left-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Gibt Abstand zwischen den Buttons */
+  margin-right: 20px; /* Verringert den Abstand zum Input-Grid auf der rechten Seite */
+}
 
+.right-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Gibt Abstand zwischen den Buttons */
+  margin-left: 20px; /* Verringert den Abstand zum Input-Grid auf der linken Seite */
+}
+  .box {
+    width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #000;
+    padding: 10px;
+    margin: 10px;
+    border: 2px solid #000;
+    position: relative; /* Needed for absolute positioning of overlay */
+  }
   .input-grid {
+    width: 360px;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #000;
+    padding: 20px;
+    margin: 20px auto; /* Zentriert das Grid, falls gewünscht */
+    border: 2px solid #000;
+    position: relative; /* Needed for absolute positioning of overlay */
+    grid-template-columns: repeat(3, 120px);
     gap: 5px;
-    width: 20%;
+    margin-bottom: 20px;
   }
 
- .grid {
-    display: grid;
-    grid-template-columns: repeat(3, 50px); /* Ändern Sie die Breite der Zellen */
-    gap: 5px;
-    width: auto; /* Ändern Sie die Breite des Grid-Containers */
-    margin-top: 10px; /* Abstand zwischen den Grids hinzufügen */
+  .transformation-box {
+    width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #000;
+    padding: 10px;
+    margin: 10px;
+    border: 2px solid #000;
+    position: relative; /* Needed for absolute positioning of overlay */
   }
-
+  .box:hover .cell, .input-grid:hover .input-cell, .transformation-box:hover .cell {
+    filter: none; /* Remove grayscale filter on hover */
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 60px);
+    gap: 5px;
+    margin-bottom: 20px;
+  }
   .cell {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #aaa;
     font-size: 24px;
+    font-weight: bold;
+    filter: grayscale(100%); /* Apply grayscale filter */
+    color: #e1e1d8;
   }
-
   .input-cell {
-    width: 50px;
-    height: 50px;
+    width: 120px;
+    height: 120px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #aaa;
-    font-size: 24px;
+    font-size: 36px;
+    font-weight: bold;
+    background-color: #e1e1d8;
+    color: #000;
   }
 
-  select {
+  .input-cell select {
     width: 100%;
     height: 100%;
-    font-size: large;
+    background-color: transparent;
+    border: none;
+    text-align: center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    font-size: 36px;
+    color: currentColor;
+    cursor: pointer;
   }
-  .box-number {
+
+  .cell-1 { background-color: #e67819; }
+  .cell-2 { background-color: #f8cd22; }
+  .cell-3 { background-color: #aa6dbe; }
+  .cell-4 { background-color: #4ba4bf; }
+  .cell-5 { background-color: #b13737; }
+  .cell-6 { background-color: #7bac72; }
+  .cell-7 { background-color: #734912; }
+  .cell-8 { background-color: #d4adba; }
+  .cell-9 { background-color: #393939; color: #e1e1d8; }
+  button, .search-btn {
+    border: 1px solid #e1e1d8;
+    background-color: #000;
+    color: #e1e1d8;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 300;
+    letter-spacing: 1px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    text-transform: uppercase;
     margin-top: 10px;
-    font-size: 14px;
+  }
+  button:hover, .search-btn:hover {
+    background-color: #e1e1d8;
+    color: #000;
+  }
+  .controls-container {
+    flex-direction: column;
   }
   .search-container {
-    margin-bottom: 20px;
     display: flex;
-    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
   }
   .search-input {
     padding: 10px;
-    width: 48%;
+    border: 2px solid #444;
+    background-color: #222;
+    color: #e1e1d8;
+    border-radius: 4px;
+    flex-grow: 1;
   }
-.transformation-container {
-    display: flex; /* Ändern Sie die Anzeige auf flex */
-    flex-wrap: wrap; /* Erlauben Sie das Umbruch von Elementen */
-    gap: 10px;
-    padding: 20px;
-    width: 100%; /* Hinzugefügt */
-  }
-  .transformation-title {
-    font-size: 16px;
-    font-weight: bold;
-  }
+  
 </style>
 </head>
 <body>
+  <header>
+    <div class="header-text">MENACE</div>
+    <div class="sub-header-text">Companion</div>
+  </header>
+<div class="search-wrapper">
+  <div class="search-container">
+    <input type="text" id="searchNumberInput" class="search-input" placeholder="Search Box-Nr....">
+    <button class="search-btn" onclick="searchBoxesByNumber()">&#128269;</button>
+  </div>
 
-<div class="search-container">
-  <input type="text" id="searchNumberInput" class="search-input" onkeyup="searchBoxesByNumber()" placeholder="Suche nach Box-Nummer...">
-  <input type="text" id="searchNotationInput" class="search-input" onkeyup="searchBoxesByNotationWithTransformations()" placeholder="Suche nach Notation (z.B. X;;;;;;;;O)">
+  <div class="search-container">
+    <input type="text" id="searchNotationInput" class="search-input" placeholder="Search Notation (;;;;;;;;)">
+    <button class="search-btn" onclick="searchBoxesByNotationWithTransformations()">&#128269;</button>
+  </div>
 </div>
 
-<div id="inputGridContainer" class="input-grid-container">
-  <!-- Das Eingabe-Grid wird hier platziert -->
+<div class="input-grid-container">
+  <div class="left-controls">
+    <button onclick="toggleSearchByNumber()" class="search-btn">Search via Box-Nr.</button>
+    <button onclick="toggleSearchByNotation()" class="search-btn">Search via Notation</button>
+  </div>
+
   <div id="inputGrid" class="input-grid box"></div>
-  <button onclick="submitInput()">Absenden</button>
+
+  <div class="right-controls">
+    <button onclick="submitInput()" class="search-btn">Enter Grid Input</button>
+    <button onclick="toggleTransformations()" class="search-btn">Hide</button>
+  </div>
 </div>
+
 <div id="transformationContainer" class="transformation-container"></div>
 <div id="boxContainer" class="box-container"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <script>
 const boxStates = [
   "(;;;;;;;;)",
-  "(O;X;;;;;;;)",
-  "(O;;;;X;;;;)",
-  "(O;;;;;X;;;)",
-  "(X;O;;;;;;;)",
+  "(;;X;;;;O;;)",
+  "(;X;;;;O;;;)",
+  "(;;O;;X;;;;)",
+  "(;O;X;;;;;;)",
+  "(;X;O;;;;;;)",
+  "(;;X;O;;;;;)",
   "(;O;;;X;;;;)",
-  "(X;;O;;;;;;)",
-  "(;X;;O;;;;;)",
-  "(X;;;;O;;;;)",
+  "(;;O;X;;;;;)",
+  "(O;;X;;;;;;)",
   "(;X;;;O;;;;)",
-  "(X;;;;;O;;;)",
   "(;X;;;;;;O;)",
-  "(X;;;;;;;;O)"
+  "(;;X;;O;;;;)"
 ];
 
+
+
+
+
+
+function toggleSearchByNumber() {
+  const searchWrapper = document.querySelector('.search-wrapper .search-container:first-child');
+  searchWrapper.style.display = searchWrapper.style.display === 'none' ? 'flex' : 'none';
+}
+
+function toggleSearchByNotation() {
+  const searchWrapper = document.querySelector('.search-wrapper .search-container:last-child');
+  searchWrapper.style.display = searchWrapper.style.display === 'none' ? 'flex' : 'none';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Initial verbergen der Sucheingabefelder
+  toggleSearchByNumber();
+  toggleSearchByNotation();
+
+  createBoxes();
+  initInputGrid();
+});
+
+
+
+
+
+
+function toggleDropdown() {
+  var optionsContainer = document.getElementById("optionsContainer");
+  if (optionsContainer.style.display === "block") {
+    optionsContainer.style.display = "none";
+  } else {
+    optionsContainer.style.display = "block";
+  }
+}
+
+function selectOption(event, value) {
+  event.stopPropagation(); // Verhindert, dass das toggleDropdown Event erneut aufgerufen wird
+  document.getElementById("selectedValue").textContent = value;
+  document.getElementById("optionsContainer").style.display = "none";
+}
+
+// Optional: Schließt das Dropdown, wenn außerhalb des Dropdowns geklickt wird
+window.onclick = function(event) {
+  if (!event.target.matches('.custom-select, .custom-select *')) {
+    document.getElementById("optionsContainer").style.display = "none";
+  }
+}
+
+
+
+
+
 const boxes = boxStates.map((state, index) => ({
-  id: index + 1, 
-  label: `Schachtel ${index + 1}`, 
+  id: index + 1,
+  label: `Box ${index + 1}`,
   state: state,
   displayState: state.substring(1, state.length - 1).split(';').map(s => s === "" ? " " : s)
 }));
 
+function mapColorClass(index) {
+  const colorMapping = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+  return `cell-${colorMapping[index] + 1}`;
+}
+
+function rotateColorMapping(mapping) {
+  return [
+    mapping[6], mapping[3], mapping[0],
+    mapping[7], mapping[4], mapping[1],
+    mapping[8], mapping[5], mapping[2]
+  ];
+}
+
+function mirrorColorMappingHorizontal(mapping) {
+  return [
+    mapping[2], mapping[1], mapping[0],
+    mapping[5], mapping[4], mapping[3],
+    mapping[8], mapping[7], mapping[6]
+  ];
+}
+function toggleTransformations() {
+  const transformationContainer = document.getElementById('transformationContainer');
+  transformationContainer.style.display = transformationContainer.style.display === 'none' ? 'flex' : 'none';
+}
+function adjustColorMappingForTransformation(transIndex, colorMapping) {
+  switch (transIndex) {
+    case 1: // 90° CCW
+      return rotateColorMapping(colorMapping);
+    case 2: // 180° CCW (zwei 90° Drehungen)
+      return rotateColorMapping(rotateColorMapping(colorMapping));
+    case 3: // 270° CCW (drei 90° Drehungen)
+      return rotateColorMapping(rotateColorMapping(rotateColorMapping(colorMapping)));
+    case 4: // Horizontal Mirror
+      return mirrorColorMappingHorizontal(colorMapping);
+    case 5: // 90° CCW + Mirror
+      return mirrorColorMappingHorizontal(rotateColorMapping(colorMapping));
+    case 6: // 180° CCW + Mirror (zwei 90° Drehungen + Spiegelung)
+      return rotateColorMapping(rotateColorMapping(mirrorColorMappingHorizontal(colorMapping)));
+    case 7: // 270° CCW + Mirror (drei 90° Drehungen + Spiegelung)
+      return mirrorColorMappingHorizontal(rotateColorMapping(rotateColorMapping(rotateColorMapping(colorMapping))));
+    default: // Keine Transformation oder Original
+      return colorMapping;
+  }
+}
+
 function createBoxes(boxesToDisplay = boxes) {
   const container = document.getElementById('boxContainer');
   container.innerHTML = '';
-  boxesToDisplay.forEach(box => {
+  boxesToDisplay.forEach((box) => {
     const boxElement = document.createElement('div');
     boxElement.classList.add('box');
     const grid = document.createElement('div');
     grid.classList.add('grid');
-    
-    box.displayState.forEach(cellState => {
+    box.displayState.forEach((cellState, cellIndex) => {
       const cell = document.createElement('div');
-      cell.classList.add('cell');
+      cell.classList.add('cell', mapColorClass(cellIndex));
       cell.textContent = cellState;
       grid.appendChild(cell);
     });
-    
     const numberElement = document.createElement('div');
     numberElement.classList.add('box-number');
     numberElement.textContent = box.label;
-    
-    // Rotate-Button hinzufügen
     const rotateButton = document.createElement('button');
     rotateButton.textContent = 'Rotate';
     rotateButton.onclick = () => showTransformations(box.state);
-
     boxElement.appendChild(grid);
     boxElement.appendChild(numberElement);
-    boxElement.appendChild(rotateButton); // Button hinzufügen
+    boxElement.appendChild(rotateButton);
     container.appendChild(boxElement);
   });
 }
@@ -180,59 +408,40 @@ function createBoxes(boxesToDisplay = boxes) {
 function showTransformations(state) {
   const transformations = generateTransformations(state);
   const transformationContainer = document.getElementById('transformationContainer');
-  transformationContainer.innerHTML = ''; // Bereinige den Container für neue Inhalte
+  transformationContainer.innerHTML = '';
   transformationContainer.style.display = 'flex';
 
-  transformations.forEach(transformation => {
+  let colorMapping = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+  const transformationDescriptions = ["Original", "90° CCW", "180° CCW", "270° CCW", "Horizontal Mirror", "90° CCW + Mirror", "180° CCW + Mirror", "270° CCW + Mirror"];
+
+  transformations.forEach((transformation, transIndex) => {
+    const currentColorMapping = adjustColorMappingForTransformation(transIndex, colorMapping);
+    const transformationBox = document.createElement('div');
+    transformationBox.classList.add('transformation-box');
     const transGrid = document.createElement('div');
-    transGrid.classList.add('box'); // Angepasst
-    transGrid.classList.add('grid'); // Angepasst
-    const transState = transformation.substring(1, transformation.length - 1).split(';');
-    
-    // Erstelle ein Mini-Grid für jede Transformation
-    transState.forEach(cellState => {
+    transGrid.classList.add('grid');
+    transformation.substring(1, transformation.length - 1).split(';').forEach((cellState, index) => {
       const cell = document.createElement('div');
-      cell.classList.add('cell');
-      cell.textContent = cellState === 'X' || cellState === 'O' ? cellState : ' ';
+      cell.classList.add('cell', mapColorClass(currentColorMapping[index]));
+      cell.textContent = cellState === "X" || cellState === "O" ? cellState : " ";
       transGrid.appendChild(cell);
     });
-
-    transformationContainer.appendChild(transGrid);
+    const descriptionElement = document.createElement('div');
+    descriptionElement.textContent = transformationDescriptions[transIndex];
+    transformationBox.appendChild(transGrid);
+    transformationBox.appendChild(descriptionElement);
+    transformationContainer.appendChild(transformationBox);
   });
 }
 
 function generateTransformations(state) {
   let grid = state.substring(1, state.length - 1).split(';');
-
-  const rotate = (grid) => {
-    return [
-      grid[6], grid[3], grid[0],
-      grid[7], grid[4], grid[1],
-      grid[8], grid[5], grid[2],
-    ];
-  };
-
-  const mirrorHorizontal = (grid) => {
-    return [
-      grid[2], grid[1], grid[0],
-      grid[5], grid[4], grid[3],
-      grid[8], grid[7], grid[6],
-    ];
-  };
-
+  const rotate = (g) => [g[6], g[3], g[0], g[7], g[4], g[1], g[8], g[5], g[2]];
+  const mirrorHorizontal = (g) => [g[2], g[1], g[0], g[5], g[4], g[3], g[8], g[7], g[6]];
   let transformations = [grid];
-  for (let i = 0; i < 3; i++) {
-    transformations.push(rotate(transformations[i]));
-  }
-
-  transformations.forEach(transformation => {
-    transformations.push(mirrorHorizontal(transformation));
-  });
-
-  transformations = transformations.map(trans => `(${trans.join(';')})`);
-  transformations = [...new Set(transformations)];
-
-  return transformations;
+  for (let i = 0; i < 3; i++) transformations.push(rotate(transformations[i]));
+  transformations = transformations.concat(transformations.map(transformation => mirrorHorizontal(transformation)));
+  return [...new Set(transformations.map(trans => `(${trans.join(';')})`))];
 }
 
 function searchBoxesByNumber() {
@@ -258,24 +467,28 @@ function submitInput() {
   notation += ')';
   document.getElementById('searchNotationInput').value = notation;
   searchBoxesByNotationWithTransformations();
+  
+  // Fügt die Ausblendung der Rotations hinzu
+  toggleTransformations();
 }
 
 function initInputGrid() {
   const inputGrid = document.getElementById('inputGrid');
-  inputGrid.innerHTML = ''; // Ensure the grid is empty before initializing
+  inputGrid.innerHTML = '';
   for (let i = 0; i < 9; i++) {
     const cell = document.createElement('div');
     cell.classList.add('input-cell');
     const select = document.createElement('select');
-    select.onchange = submitInput; // Update to automatically submit on change
-    select.innerHTML = `<option value=''> </option><option value='X'>X</option><option value='O'>O</option>`;
+    select.innerHTML = "<option value=''> </option><option value='X'>X</option><option value='O'>O</option>";
     cell.appendChild(select);
     inputGrid.appendChild(cell);
   }
 }
 
-createBoxes();
-initInputGrid();
+document.addEventListener('DOMContentLoaded', () => {
+  createBoxes();
+  initInputGrid();
+});
 </script>
 </body>
 </html>
